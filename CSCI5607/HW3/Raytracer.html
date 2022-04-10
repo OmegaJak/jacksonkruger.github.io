@@ -11,7 +11,7 @@
 		<h2>Homework 3 - Fully-Featured Raytracer</h2>
 		<p><i>Jackson Kruger</i></p>
     <p>
-      The source code for my Raytracer can be found on <a href="https://github.umn.edu/kruge203/CSCI5607/tree/master/Raytracer">Github</a>.
+      The source code for my Raytracer can be found on <a href="https://github.com/OmegaJak/UMN_CSCI5607/tree/master/Raytracer">Github</a>.
       I developed this Raytracer in Visual Studio in Windows. A compiled executable can be downloaded <a href="#" download>here</a>.
     </p>
     <h4>Features (which should be apparent from the outputs below)</h4>
@@ -60,7 +60,7 @@
 				<br><br>
 				Largely regardless of tweaks I made to this approach, most of my scenes were at least twice as slow when using the BVH's. I couldn't figure out why. Additionally,
 				any tri-heavy scenes I tried crashed due to a stack overflow (something was happening to produce 0-size bounding boxes, leading to infinite recursion). So I cut
-				my losses and put my BVH work onto a <a href="https://github.umn.edu/kruge203/CSCI5607/tree/FailedBVHAttempt/Raytracer/Raytracer">branch on GitHub</a>, reverting the 
+				my losses and put my BVH work onto a <a href="https://github.com/OmegaJak/UMN_CSCI5607/tree/FailedBVHAttempt/Raytracer/Raytracer">branch on GitHub</a>, reverting the 
 				work from my main branch. Most of the relevant code can be found in BoundingBox.cpp and IntersectableGroup::InitializeBVH().
 			</li>
 			<li>I attempted motion blur but wasn't happy with my results. First I tried moving objects over time, with time passing as pixels are drawn. This produced
