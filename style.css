@@ -39,11 +39,4 @@ th {
 }
 
 @media (prefers-color-scheme: light) {
-	a:link {
-		color: #5bf;
-	}
-
-	a:visited {
-		color: #ccf;
-	}
 }
