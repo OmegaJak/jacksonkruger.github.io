@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5607/HW3/Raytracer.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:20:14 GMT -->
+<head>
+		<title>HW3</title>
+		<link rel="stylesheet" href="../../style.css">
+	</head>
+	<body>
+		<a href="../index.html"> .. </a>
+		<h2>Homework 3 - Fully-Featured Raytracer</h2>
+		<p><i>Jackson Kruger</i></p>
+    <p>
+      The source code for my Raytracer can be found on <a href="https://github.umn.edu/kruge203/CSCI5607/tree/master/Raytracer">Github</a>.
+      I developed this Raytracer in Visual Studio in Windows. A compiled executable can be downloaded <a href="#" download>here</a>.
+    </p>
+    <h4>Features (which should be apparent from the outputs below)</h4>
+    <p>
+      <ul>
+        <li>Arbitrary camera placement, film resolution, aspect ratio</li>
+        <li>User specified background color</li>
+        <li>BMP output</li>
+        <li>Spheres, Triangles (both with auto normals and user-specified surface normals), Planes, Rectangles, Rectangular Prisms</li>
+        <li>Ambient lights, point lights, spot lights, directional lights, multiple lights</li>
+        <li>Basic sampling, grid-based supersampling, jittered supersampling</li>
+        <li>Diffuse, specular, ambient, (bounded) recursive reflective and refractive lighting, hard shadows</li>
+				<li>Depth of field</li>
+				<li>Motion warp - makes images look like they're going really fast but doesn't blur them (more of a rolling shutter kind of thing)</li>
+      </ul>
+			Attempted but not working or barely working:
+			<ul>
+				<li>BVH as an acceleration structure - more on this below</li>
+				<li>Motion blur - more below</li>
+			</ul>
+    </p>
+    <h4>Architecture Overview</h4>
+    <p>
+      The file containing main, Raytracer.cpp, only exists to kick things off. It tells <b>Parser</b> what file to parse, who then initializes the relevant
+			objects and sets appropriate values. The most important objects it initializes are the <b>Renderer</b>, the <b>Scene</b>, and the <b>Camera</b>.
+			The <b>Scene</b> contains all of the lights and shapes, while the camera primarily exists to construct the rays.
+			The <b>Renderer</b> is the bridge between the <b>Camera</b> and the <b>Scene</b>, as well as the final <b>Image</b>
+      object that is used to output at the end. It iterates over width and height, telling the camera to construct the rays, getting the colors
+      of the pixels from the <b>Scene</b>, then setting the pixels of the <b>Image</b>. The <b>Scene</b> has a collection of <b>Intersectable</b>s which it
+			it tells to intersect with the current <b>Ray</b>, potentiall modifying the out-parameter <b>Intersection</b>. I employed object-oriented patterns pretty heavily,
+			and leveraged C++'s polymorphism heavily as well. For example, a <b>Primitive</b> is something that is both <b>Intersectable</b> and <b>Materialed</b>.
+			An <b>IntersectableGroup</b> is a collection of other <b>Intersectable</b>s, and is thus itself <b>Intersectable</b>, but does not have a <b>Material</b>.
+    </p>
+		<h4>Notes</h4>
+		<ul>
+			<li> I spent a while trying to figure out why my point lights weren't getting as bright as the sample images when very close to objects.
+				It was simply because early on I'd decided to clamp my PointLight's illuminance when returned.</li>
+			<li> I really tried to get a BVH working. I set up all the necessary logic to use axis-aligned bounding boxes, put them around all primitives,
+				intelligently grew the bounding boxes to encompass all children in an IntersectableGroup, etc. But in the end my BVH actually slowed down my Raytracer.
+				I think the most likely cause of this was how I constructed the BVH. I used a top-down approach. An IntersectableGroup would split its BoundingBox
+				in half (halving the longest dimension), and make two new IntersectableGroups to match these BB's. It would then iterate through its children, checking
+				if their bounding boxes intersected or were contained in the half bounding boxes, and adding them to the relevant IntersectableGroups if they did.
+				It would then clear its children, add the two new IntersectableGroups as children, and tell them to initialize their BVH's, recursing. Each IntersectableGroup
+				would then regenerate its bounding box to fit its children, which happened in a bottom-up fashion. I also tried splitting into 8 bounding boxes. I tried varying the
+				desired number of children per node (2-8) but this didn't seem to make a difference.
+				<br><br>
+				Largely regardless of tweaks I made to this approach, most of my scenes were at least twice as slow when using the BVH's. I couldn't figure out why. Additionally,
+				any tri-heavy scenes I tried crashed due to a stack overflow (something was happening to produce 0-size bounding boxes, leading to infinite recursion). So I cut
+				my losses and put my BVH work onto a <a href="https://github.umn.edu/kruge203/CSCI5607/tree/FailedBVHAttempt/Raytracer/Raytracer">branch on GitHub</a>, reverting the 
+				work from my main branch. Most of the relevant code can be found in BoundingBox.cpp and IntersectableGroup::InitializeBVH().
+			</li>
+			<li>I attempted motion blur but wasn't happy with my results. First I tried moving objects over time, with time passing as pixels are drawn. This produced
+				something of a 'motion warp' distortion, which I kept, but was not motion blur. I then tried a couple variations on the method of setting the time to a random value
+				for each ray as it's cast from the camera, then averaging the results, but I wan't happy with this. I'm not sure how to get good-looking motion blur. I left that 
+				implementation in my main rendering loop (in Renderer.cpp), but commented it out.
+			</li>
+			<li>At some point I decided to put the logic for determining which intersection is closer into Intersection itself. After many bugs arising because of the approach I'm now
+				pretty sure this was a poor way to do it.
+			</li>
+			<li>My images are horizontally flipped from the images provided by Mr. Guy. This is because I envisioned the camera viewing plane as being projected directly
+				onto the monitor, while he imagined them as being viewed from the other side.
+			</li>
+		</ul>
+		<p><br>My compiled executable for windows as well as all images and scenes used here (they have the same names) can be downloaded: <a href="JacksonKrugerRaytracer.zip" download>here</a></p>
+    <h3>Output Images</h3>
+    <h4>Sample scenes</h4>
+    <p>
+      The following are the rendered outputs of the provided sample scenes. The only modification I made to these before running them
+        was changing the output file location.
+    </p>
+		<img src="images/SampleScenes/ambient_sphere.bmp">
+		<img src="images/SampleScenes/spheres1.bmp">
+		<img src="images/SampleScenes/spheres2.bmp">
+		<img src="images/SampleScenes/spot_sphere.bmp">
+		<img src="images/SampleScenes/bear.bmp">
+		<img src="images/SampleScenes/guys_triangle.bmp">
+		<img src="images/SampleScenes/outdoor.bmp">
+		<img src="images/SampleScenes/test_reasonable.bmp">
+		<img src="images/SampleScenes/ShadowTest.bmp">
+		<img src="images/SampleScenes/bottle.bmp">
+		<img src="images/SampleScenes/bottle-nolabel.bmp">
+		<img src="images/SampleScenes/gear.bmp">
+		<img src="images/SampleScenes/dragon.bmp">
+		<img src="images/SampleScenes/arm-reach.bmp">
+		<img src="images/SampleScenes/arm-top.bmp">
+    <h4>Custom scenes</h4>
+    <p>
+      The following a variety of custom scenes that I made.
+    </p>
+		<img src="images/CustomScenes/spheres3.bmp">
+		<img src="images/CustomScenes/triangle.bmp">
+		<img src="images/CustomScenes/plane.bmp">
+
+		<p><br>That same image rendered with depth of field and supersampling</p>
+		<img src="images/CustomScenes/fancy_plane.bmp"><br>
+		<img src="images/CustomScenes/spotlight.bmp">
+		<img src="images/CustomScenes/triforce.bmp">
+		<p><br>A sphere moving from left to right using my motion_warp option</p>
+		<img src="images/CustomScenes/fast_sphere.bmp">
+
+		<p><br>A glass sphere just in front of the camera</p>
+		<img src="images/CustomScenes/through_the_looking_glass.bmp">
+
+		<p><br>My personal favorite scene. I'd like for this image and the ones like it to be submitted for the art contest.</p>
+		<img src="images/CustomScenes/refraction.bmp">
+		<p><br>And other old versions of this scene</p>
+		<img src="images/Weirds/raytraced.bmp">
+		<img src="images/Weirds/Praise%20Him.bmp">
+		<img src="images/Weirds/Quad%202.bmp" title="Portal to R'lyeh">
+		<img src="images/Weirds/Quad.bmp">
+		<img src="images/Weirds/Crazy%20Refraction.bmp">
+
+		<p><br>This was a messed up output of "test_reasonable.scn"</p>
+		<img src="images/Weirds/foo.bmp">
+	<h4>Resolution and Aspect Ratio</h4>
+	<p>
+		These are just to show that my Raytracer can handle odd FOV's and resolutions (they have hover text). Note that these images
+		were rendered at the for the first checkin (HW2), and thus don't have refraction in them.
+	</p>
+	<img src="images/lowRes.bmp" title="film_resolution 100 100">
+	<img src="images/megaTall.bmp" title="film_resolution 100 400">
+	<img src="images/megaWide.bmp" title="film_resolution 400 100">
+	<img src="images/FOV10.bmp" title="Camera FOV set to 10">
+	<img src="images/FOV75.bmp" title="Camera FOV set to 75">
+
+	<h4>Scene File Additions</h4>
+	<p>
+		plane nx ny nz px py pz<br>
+		quad px py pz rx ry rz ux uy uz<br>
+		rectangular_prism px py pz rx ry rz ux uy uz fx fy fz<br>
+		end_position px py pz<br>
+		motion_warp boolOn<br>
+		DOF focalDistance lensRadius numSamples<br>
+		supersampling sampleRadius<br>
+		jittered_supersampling boolJittered<br>
+	</p>
+
+	<h4>Performance</h4>
+	<p>I'm not too happy with my performance overall, especially considering my failure to implement a BVH. I also didn't attempt parallelization as my Raytracer
+		doesn't seem to be CPU-bound. It's rare for a core to max while I'm running intense scenes, probably indicating it's spending much of its time creating/destroying objects.
+		I didn't get a chance to give a thorough effort to optimize, beyond the little attempts I made throughout the project.
+	</p>
+	<style type="text/css">
+		table.tableizer-table {
+			font-size: 12px;
+			border: 1px solid #CCC;
+			font-family: Arial, Helvetica, sans-serif;
+		}
+	
+		.tableizer-table td {
+			padding: 4px;
+			margin: 3px;
+			border: 1px solid #CCC;
+		}
+	
+		.tableizer-table th {
+			background-color: #104E8B;
+			color: #FFF;
+			font-weight: bold;
+		}
+	</style>
+	<table class="tableizer-table">
+		<thead>
+			<tr class="tableizer-firstrow">
+				<th>Scene</th>
+				<th>Runtime</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>ambient_sphere.scn</td>
+				<td>98ms</td>
+			</tr>
+			<tr>
+				<td>spheres1.scn</td>
+				<td>1269ms</td>
+			</tr>
+			<tr>
+				<td>spheres2.scn</td>
+				<td>3893ms</td>
+			</tr>
+			<tr>
+				<td>spot_sphere.scn</td>
+				<td>106ms</td>
+			</tr>
+			<tr>
+				<td>bear.scn</td>
+				<td>1220ms</td>
+			</tr>
+			<tr>
+				<td>guys_triangle.scn</td>
+				<td>80ms</td>
+			</tr>
+			<tr>
+				<td>outdoor.scn</td>
+				<td>770ms</td>
+			</tr>
+			<tr>
+				<td>test_reasonable.scn</td>
+				<td>692ms</td>
+			</tr>
+			<tr>
+				<td>ShadowTest.txt</td>
+				<td>5721ms</td>
+			</tr>
+			<tr>
+				<td>bottle.txt</td>
+				<td>59487ms</td>
+			</tr>
+			<tr>
+				<td>bottle-nolabel.txt</td>
+				<td>100791ms</td>
+			</tr>
+			<tr>
+				<td>gear.txt</td>
+				<td>494122ms</td>
+			</tr>
+			<tr>
+				<td>arm-top.txt</td>
+				<td>245871ms</td>
+			</tr>
+			<tr>
+				<td>reaching_hand.txt</td>
+				<td>494999ms</td>
+			</tr>
+			<tr>
+				<td>dragon.scn</td>
+				<td>692054ms</td>
+			</tr>
+		</tbody>
+	</table>
+	<div style="font-weight: normal; clear: both; margin-top: 25px; font-size: small; font-style: italic;"><p>The views and opinions expressed in this page are strictly those of the page author.<br>The contents of this page have not been reviewed or approved by the University of Minnesota.</p></div></body>
+
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5607/HW3/Raytracer.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:20:22 GMT -->
+</html>

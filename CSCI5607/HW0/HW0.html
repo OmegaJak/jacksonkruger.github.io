@@ -1,0 +1,47 @@
+<!DOCTYPE html> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+	
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5607/HW0/HW0.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:19:39 GMT -->
+<head> 
+		<title>HW0</title>
+		<link rel="stylesheet" href="../../style.css">
+	</head> 
+	<body>
+		<a href="../index.html"> .. </a>
+		<h2>Homework 0 - Graphics Warmup</h2>
+		<p><i>Jackson Kruger</i></p>
+		<p> The following gifs demonstrate the functionality of my implementation of a square renderer. If they take too long to load,
+			the individual gifs can be opened in their own tabs. I initially tried setting up my development in Windows, but quickly decided that wasn't worth the pain.
+			After switching over to my Ubuntu VM, I had no trouble with the libraries at all, and compilation was straightforward.
+		</p>
+		<p> The biggest difficulty encountered was determining why the images loaded in upside-down. After much debugging, I learned that it was just due 
+			to how OpenGL interprets images. Everything else was reasonably straightforward to implement.
+		</p>
+		<p> The source code can be found on <a href="https://github.umn.edu/kruge203/CSCI5607/tree/master/HW0">GitHub</a>. <a href="https://github.umn.edu/kruge203/CSCI5607/blob/master/HW0/Square.cpp">Square.cpp</a></a></p>
+		<p> Basic required features - translation, scaling, and rotation (and loading test.ppm): </p>
+		<img src="Square%20Basics.gif" height="300"/>
+		<p> Demonstration of brightening and darkening (in response to +/- key presses): </p>
+		<img src="Brighten%20Darken.gif" height="300"/>
+		<p> Graphical indicators of what motion is being performed: </p>
+		<img src="Motion%20Indicators.gif" height="300"/>
+		<p> Animation independent of user input (after toggle button): </p>
+		<img src="Square%20Animation.gif" height="300"/>
+		<p> Maintaining the square's shape (and behavior) when aspect ratio changes: </p>
+		<img src="Resizing.gif" height="300"/>
+		<p> Different loaded image (goldy.ppm):</p>
+		<img src="Goldy.png" height="300"/>
+		<p> A compiled executable for Ubuntu can be found here: <a href="square.out" download> square.out</a> </p>
+		<p>Keybindings: </p>
+		<ul>
+			<li><b>Escape</b> exits the program</li>
+			<li><b>f</b> fullscreens</li>
+			<li><b>equals</b> brightens the image</li>
+			<li><b>minus</b> darkens the image</li>
+			<li><b>r</b> resets the square</li>
+			<li><b>s</b> initiates the square's independent animation ("fun mode")</li>
+			<li><b>g</b> toggles motion indicators (background coloration)</li>
+		</ul>
+	<div style="font-weight: normal; clear: both; margin-top: 25px; font-size: small; font-style: italic;"><p>The views and opinions expressed in this page are strictly those of the page author.<br>The contents of this page have not been reviewed or approved by the University of Minnesota.</p></div></body> 
+
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5607/HW0/HW0.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:19:40 GMT -->
+</html>

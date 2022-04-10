@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5611/HW2/PhysicalSimulation.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:20:25 GMT -->
+<head>
+	<title>Physical Simulations</title>
+	<link rel="stylesheet" href="../../style.css">
+	<style>
+		video {
+			height: 450px;
+		}
+
+		table {
+			border-collapse: collapse;
+		}
+
+		th, td {
+			padding: 3px;
+		}
+	</style>
+</head>
+
+<body>
+	<a href="../index.html">..</a>
+	<h1>Homework 2 - Physical Simulations</h1>
+	<p><i>Jackson Kruger</i></p>
+	<p>
+		The source code for these simulations can be found <a href="https://github.umn.edu/kruge203/CSCI5611/tree/master/">on Github</a>. The code for the cloth simulation
+		can be found <a href="https://github.umn.edu/kruge203/CSCI5611/tree/master/Physical Simulations/PhysicalSimulations">here</a> and the code for the fluid simulation
+		can be found <a href="https://github.umn.edu/kruge203/CSCI5611/tree/master/Fluid">here</a>. A zip of the compiled executables and supporting files for the two simulations
+		can be downloaded <a href="PhysicalSimulations.zip" download>here</a>. I wrote my cloth simulation with C++ OpenGL (with a compute shader), while I wrote my eulerian fluid in Processing.
+	</p>
+
+	<h2>Features</h2>
+	<p>
+		<ul>
+			<li>Realtime Rendering (5)
+				<ul><li>FPS is displayed in the title bar of each demo</li></ul>
+			</li>
+			<li>Videos documenting systems and highlighting features (5)</li>
+			<li>3D rendering with user-controlled camera (5)</li>
+			<li>Real-time user interaction with the systems (5)</li>
+			<li>3D Mass-spring cloth simulation (20)</li>
+			<li>Drag term in cloth simulation (10?)</li>
+			<li>1-way cloth-object interaction (10)
+				<ul><li>First visible at 0:12 in the "General Cloth Demo" video</li></ul>
+			</li>
+			<li>All benchmarks - 128x180 cloth at ~50 FPS (15)
+				<ul><li>All video demos were run on my personal system with a GTX 1070 and an AMD FX-8350</li></ul>
+			</li>
+			<li>Eulerian (1st order) integrator (5)
+				<ul><li>Visible in the "Integration Methods Comparison" video, on the right.</li></ul>
+			</li>
+			<li>Higher-order explicit integrators - tried both RK4 and midpoint, final demo uses the midpoint method (5)</li>
+			<li>Video comparing Eulerian, Midpoint, and RK4 integration (5)
+				<ul><li>"Integration Methods Comparison" video found below</li></ul>
+			</li>
+			<li>Textured cloth (10)</li>
+			<li>SIMD/GPU Implementation (10?)
+				<ul><li>All cloth physics computation takes place on the GPU in an OpenGL compute shader. However, I never had an implementation of cloth that ran purely
+					on the CPU, thus, I cannot document any performance gain. I went straight to a compute shader when implementing the cloth. I believe the effect of the compute
+					shader should be evident enough in my performance results.
+				</li></ul>
+			</li>
+			<li>2D Eulerian fluid simulation (ala <a href="http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf">Stam GDC '03</a>) (30)</li>
+		</ul>
+	</p>
+
+	<h2>Simulations</h2>
+	<h3>Cloth</h3>
+	<p>
+		I implemented my cloth simulation in C++ OpenGL, performing all physics computation inside a GLSL compute shader. After initializing the necessary buffer objects for
+		the compute shader, all the CPU does is receive user input, call the compute shader, and render the scene. The mesh for the cloth updates purely through the beauty of
+		OpenGL VAOs, only needing an additional index buffer object to specify how to turn the positions and normals arrays on the compute shader into a mesh. After setup, the 
+		cloth's mesh updates purely on the GPU, without meaningful CPU interference.
+		<br><br>
+		In the compiled demo, and the following video, the cloth consists of 128x180 masses connected vertically and horizontally by springs. The cloth updates with a dt value of 0.00002,
+		requiring about 833 physics updates per frame. For each of these iterations, the compute shader runs once per each of the 23,040 masses and computes accelerations. After a memory
+		barrier to sync the parallel executions, another compute is performed per mass to apply accelerations to positions and calculate new normals.
+		<br><br>
+		Note in this video the scale of the cloth compared to the 'scale person' shown behind it. This cloth is probably something like 30 meters tall.
+		<br><br>
+		<i>General Cloth Demo</i><br>
+		<video controls>
+			<source src="Videos/General%20Demo%203.mp4" type="video/mp4">
+		</video>
+		
+		<br><br>
+
+		Several integration methods were attempted for the cloth. The following video compares the Eulerian, Midpoint, and RK4 integration methods.
+		In the end, I used the Midpoint method as I could not notice a significant improvement going from Midpoint to RK4, while RK4 had a noticeable impact on framerate.
+		Note that the videos do in fact start at the same time. Watch the "Sim Running" text in the title bar to confirm this.
+		<br><br>
+		<i>Integration Methods Comparison</i><br>
+		<video controls>
+			<source src="Videos/Integration%20Methods.mp4" type="video/mp4">
+		</video>
+
+		<br><br>
+
+		The cloth does include a drag term, though it's not physically accurate. The drag term's code can be found on
+		 <a href="https://github.umn.edu/kruge203/CSCI5611/blob/5322cec90a3252396dfe79ba78f80418a489aea5/Physical Simulations/PhysicalSimulations/clothComputeShader.glsl#L148">this line of the code</a>.
+		It opposes the velocity of the cloth in the direction of the normal, but does not scale with the area of the cloth. The following two videos compare the cloth falling with and without
+		this drag term. The drag term is also most of the reason the cloth in the general demo above eventually 'settles down'.
+		<br><br>
+		<i>With Drag (left) / Without Drag (right) Comparison</i><br>
+		<video controls>
+			<source src="Videos/With%20Drag%202.mp4" type="video/mp4">
+		</video>
+		<video controls>
+			<source src="Videos/Without%20Drag%202.mp4" type="video/mp4">
+		</video>
+
+		<br><br>
+		The biggest challenge faced during implementation was relatively early on, when I had designed my compute shader to run once per spring, instead of once per mass (this seemed
+		cleaner to me, architecturally). This lead to race conditions, as I was storing velocities/accelerations per-mass, and multiple springs were attached to each mass.
+		The race condition manifested by the cloth gradually spinning out of control, as shown in the video below. The solution was to redesign the compute shader to run per-mass, removing altogether the
+		chance for race conditions. (for this video, the masses are the brown spheres, springs are not rendered)
+		<br><br>
+		<i>Spinning Out of Control</i><br>
+		<video controls>
+			<source src="Videos/Spinning%20out%20of%20Control.mp4" type="video/mp4">
+		</video>
+		<br>
+		<h4>Tools/Libraries Used</h4>
+		<p>
+			This cloth simulation is based on OpenGL with a GLSL compute shader. I wrote it for Windows in Visual Studio. <a href="https://www.libsdl.org/">SDL</a>
+			is used to interface with Windows. The library <a href="https://www.libsdl.org/projects/SDL_image/">SDL_Image</a> is used to load .png textures.
+			<a href="https://glad.dav1d.de/">Glad</a> is used as an interface to OpenGL. The texture for the cloth comes from the user
+			<a href="https://www.deviantart.com/achaley/art/The-Flag-of-House-Stark-553003572">"achaley" on DeviantArt</a>.
+		</p>
+	</p>
+		
+	<h3>Fluid</h3>
+	<p>
+		I had originally hoped to write a nice 3D compute-shader based eulerian fluid simulation (with surface tracking and probably raymarching), but it turns out that's really, really hard.
+		So, I settled for writing a 2D Eulerian fluid simulation in Processing, based on Jos Stam's paper
+		<a href="http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf">"Real-Time Fluid Dynamics for Games"</a> in Processing. I didn't get the chance to port this over to
+		the fast world of	C++ OpenGL compute shaders, so performance in this demo is quite poor. Nonetheless, the following video demonstrates my 2D Eulerian fluid simulation. The red lines
+		I turn on at 0:18 point the direction of the fluid's velocity for each cell. Black is the least dense, followed by blue, then teal, then white. I adjust the thresholds between these
+		colors at 0:29 in the video to show contours in the increasingly dense fluid.
+		<br><br>
+		<i>General Fluid Demo</i><br>
+		<video controls>
+			<source src="Videos/General%20Fluid%20Demo.mp4">
+		</video>
+
+		<br><br>
+		I tried to add gravity to the simulation, and it somewhat worked, but wasn't quite right, because the edge between fluid and no fluid is not tracked.
+		<i>'Water' with 'Gravity'</i>
+		<video controls>
+			<source src="Videos/Water%20with%20Gravity%20Kinda.mp4">
+		</video>
+
+		<br>
+		<h4>Tools/Libraries Used</h4>
+		<p>
+			The simulation is written in <a href="https://processing.org/">Processing</a>. My implementation was based heavily on Jos Stam's paper
+			<a href="http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf">"Real-Time Fluid Dynamics for Games"</a>, and was also informed
+			by this <a href="https://www.openprocessing.org/sketch/455868/">ProcessingJS</a> implementation I found.
+		</p>
+	</p>
+
+	<h2>Controls</h2>
+	<div>
+		<table>
+			<tr>
+				<th colspan="2">Cloth</th>
+			</tr>
+			<tr>
+				<th>Key(s)</th>
+				<th>Effect</th>
+			</tr>
+			<tr>
+				<td>Right click</td>
+				<td>Rotate Camera</td>
+			</tr>
+			<tr>
+				<td>WASD, R/F</td>
+				<td>Move camera forward, left, back, right, up, and down</td>
+			</tr>
+			<tr>
+				<td>Left click</td>
+				<td>Move sphere</td>
+			</tr>
+			<tr>
+				<td>-/=</td>
+				<td>Change distance of sphere from camera</td>
+			</tr>
+			<tr>
+				<td>Space</td>
+				<td>Play/pause simulation</td>
+			</tr>
+		</table>
+		<br>
+		<table>
+			<tr>
+				<th colspan="2">Fluid</th>
+			</tr>
+			<tr>
+				<th>Key(s)</th>
+				<th>Effect</th>
+			</tr>
+			<tr>
+				<td>Left click + drag</td>
+				<td>Add fluid/velocity</td>
+			</tr>
+			<tr>
+				<td>Shift</td>
+				<td>Modifies left click to only apply velocity, not add fluid</td>
+			</tr>
+			<tr>
+				<td>r</td>
+				<td>Reset simulation</td>
+			</tr>
+			<tr>
+				<td>1/2</td>
+				<td>Increase/decrease threshold for blue coloring</td>
+			</tr>
+			<tr>
+				<td>3/4</td>
+				<td>Increase/decrease threshold for green coloring</td>
+			</tr>
+			<tr>
+				<td>5/6</td>
+				<td>Increase/decrease threshold for red coloring</td>
+			</tr>
+		</table>
+	</div>
+
+	<h2>Fun Mistakes</h2>
+	<div>
+		<i>~Danger Cloth~</i><br>
+		<video controls>
+			<source src="Videos/Danger%20Cloth.mp4">
+		</video>
+		
+		<br><br>
+
+		<i>Rolling Waves</i><br>
+		<video controls>
+			<source src="Videos/Rolling%20Waves.mp4">
+		</video>
+
+		<br><br>
+		<i>Random Pins Bug</i><br>
+		<video controls>
+			<source src="Videos/Pins%20Bug.mp4">
+		</video>
+		<br>
+		<p>This last video's bug still happens if either dimension of the cloth is exactly 64. I have no idea why.</p>
+	</div>
+
+	<h2>Misc</h2>
+	<p>
+		All videos shown here (and more) can also be found on <a href="https://drive.google.com/open?id=1TNMaZurWXFUegzYRNTHWPd-dQmG12WuE">Google Drive</a>.
+	</p>
+
+	<p>Source code can be found <a href="https://github.umn.edu/kruge203/CSCI5611">on GitHub</a></p>
+<div style="font-weight: normal; clear: both; margin-top: 25px; font-size: small; font-style: italic;"><p>The views and opinions expressed in this page are strictly those of the page author.<br>The contents of this page have not been reviewed or approved by the University of Minnesota.</p></div></body>
+
+
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5611/HW2/PhysicalSimulation.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:26:49 GMT -->
+</html>

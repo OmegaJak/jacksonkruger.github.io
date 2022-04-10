@@ -1,0 +1,503 @@
+<html>
+
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+	<title>Final Project - Maze Game VR</title>
+	<style type="text/css">
+		ul.lst-kix_x8xx8t6ffyfe-7 {
+			list-style-type: none
+		}
+
+		ul.lst-kix_x8xx8t6ffyfe-8 {
+			list-style-type: none
+		}
+
+		ul.lst-kix_x8xx8t6ffyfe-5 {
+			list-style-type: none
+		}
+
+		.lst-kix_x8xx8t6ffyfe-2>li:before {
+			content: "-  "
+		}
+
+		ul.lst-kix_x8xx8t6ffyfe-6 {
+			list-style-type: none
+		}
+
+		ul.lst-kix_x8xx8t6ffyfe-3 {
+			list-style-type: none
+		}
+
+		ul.lst-kix_x8xx8t6ffyfe-4 {
+			list-style-type: none
+		}
+
+		ul.lst-kix_x8xx8t6ffyfe-1 {
+			list-style-type: none
+		}
+
+		ul.lst-kix_x8xx8t6ffyfe-2 {
+			list-style-type: none
+		}
+
+		.lst-kix_x8xx8t6ffyfe-3>li:before {
+			content: "-  "
+		}
+
+		.lst-kix_x8xx8t6ffyfe-4>li:before {
+			content: "-  "
+		}
+
+		ul.lst-kix_x8xx8t6ffyfe-0 {
+			list-style-type: none
+		}
+
+		.lst-kix_x8xx8t6ffyfe-1>li:before {
+			content: "-  "
+		}
+
+		.lst-kix_x8xx8t6ffyfe-5>li:before {
+			content: "-  "
+		}
+
+		.lst-kix_x8xx8t6ffyfe-0>li:before {
+			content: "-  "
+		}
+
+		.lst-kix_x8xx8t6ffyfe-7>li:before {
+			content: "-  "
+		}
+
+		.lst-kix_x8xx8t6ffyfe-8>li:before {
+			content: "-  "
+		}
+
+		.lst-kix_x8xx8t6ffyfe-6>li:before {
+			content: "-  "
+		}
+
+		ol {
+			margin: 0;
+			padding: 0
+		}
+
+		table td,
+		table th {
+			padding: 0
+		}
+
+		.c1 {
+			margin-left: 36pt;
+			padding-top: 0pt;
+			padding-left: 0pt;
+			padding-bottom: 0pt;
+			line-height: 1.15;
+			orphans: 2;
+			widows: 2;
+			text-align: left
+		}
+
+		.c5 {
+			padding-top: 0pt;
+			text-indent: 36pt;
+			padding-bottom: 0pt;
+			line-height: 1.15;
+			orphans: 2;
+			widows: 2;
+			text-align: left
+		}
+
+		.c8 {
+			color: #000000;
+			font-weight: 400;
+			text-decoration: none;
+			vertical-align: baseline;
+			font-size: 26pt;
+			font-family: "Arial";
+			font-style: normal
+		}
+
+		.c0 {
+			color: #000000;
+			font-weight: 400;
+			text-decoration: none;
+			vertical-align: baseline;
+			font-size: 11pt;
+			font-family: "Arial";
+			font-style: normal
+		}
+
+		.c2 {
+			color: #434343;
+			font-weight: 400;
+			text-decoration: none;
+			vertical-align: baseline;
+			font-size: 14pt;
+			font-family: "Arial";
+			font-style: normal
+		}
+
+		.c6 {
+			padding-top: 0pt;
+			padding-bottom: 0pt;
+			line-height: 1.15;
+			orphans: 2;
+			widows: 2;
+			text-align: left
+		}
+
+		.c10 {
+			padding-top: 16pt;
+			padding-bottom: 4pt;
+			line-height: 1.15;
+			page-break-after: avoid;
+			text-align: left
+		}
+
+		.c3 {
+			padding-top: 0pt;
+			padding-bottom: 3pt;
+			line-height: 1.15;
+			page-break-after: avoid;
+			text-align: left
+		}
+
+		.c4 {
+			text-decoration-skip-ink: none;
+			-webkit-text-decoration-skip: none;
+			color: #1155cc;
+			text-decoration: underline
+		}
+
+		.c7 {
+			background-color: #ffffff;
+			max-width: 468pt;
+			padding: 72pt 72pt 72pt 72pt
+		}
+
+		.c9 {
+			color: inherit;
+			text-decoration: inherit
+		}
+
+		.c13 {
+			padding: 0;
+			margin: 0
+		}
+
+		.c11 {
+			font-style: italic
+		}
+
+		.c12 {
+			height: 11pt
+		}
+
+		.title {
+			padding-top: 0pt;
+			color: #000000;
+			font-size: 26pt;
+			padding-bottom: 3pt;
+			font-family: "Arial";
+			line-height: 1.15;
+			page-break-after: avoid;
+			orphans: 2;
+			widows: 2;
+			text-align: left
+		}
+
+		.subtitle {
+			padding-top: 0pt;
+			color: #666666;
+			font-size: 15pt;
+			padding-bottom: 16pt;
+			font-family: "Arial";
+			line-height: 1.15;
+			page-break-after: avoid;
+			orphans: 2;
+			widows: 2;
+			text-align: left
+		}
+
+		li {
+			color: #000000;
+			font-size: 11pt;
+			font-family: "Arial"
+		}
+
+		p {
+			margin: 0;
+			color: #000000;
+			font-size: 11pt;
+			font-family: "Arial"
+		}
+
+		h1 {
+			padding-top: 20pt;
+			color: #000000;
+			font-size: 20pt;
+			padding-bottom: 6pt;
+			font-family: "Arial";
+			line-height: 1.15;
+			page-break-after: avoid;
+			orphans: 2;
+			widows: 2;
+			text-align: left
+		}
+
+		h2 {
+			padding-top: 18pt;
+			color: #000000;
+			font-size: 16pt;
+			padding-bottom: 6pt;
+			font-family: "Arial";
+			line-height: 1.15;
+			page-break-after: avoid;
+			orphans: 2;
+			widows: 2;
+			text-align: left
+		}
+
+		h3 {
+			padding-top: 16pt;
+			color: #434343;
+			font-size: 14pt;
+			padding-bottom: 4pt;
+			font-family: "Arial";
+			line-height: 1.15;
+			page-break-after: avoid;
+			orphans: 2;
+			widows: 2;
+			text-align: left
+		}
+
+		h4 {
+			padding-top: 14pt;
+			color: #666666;
+			font-size: 12pt;
+			padding-bottom: 4pt;
+			font-family: "Arial";
+			line-height: 1.15;
+			page-break-after: avoid;
+			orphans: 2;
+			widows: 2;
+			text-align: left
+		}
+
+		h5 {
+			padding-top: 12pt;
+			color: #666666;
+			font-size: 11pt;
+			padding-bottom: 4pt;
+			font-family: "Arial";
+			line-height: 1.15;
+			page-break-after: avoid;
+			orphans: 2;
+			widows: 2;
+			text-align: left
+		}
+
+		h6 {
+			padding-top: 12pt;
+			color: #666666;
+			font-size: 11pt;
+			padding-bottom: 4pt;
+			font-family: "Arial";
+			line-height: 1.15;
+			page-break-after: avoid;
+			font-style: italic;
+			orphans: 2;
+			widows: 2;
+			text-align: left
+		}
+	</style>
+</head>
+
+<body class="c7">
+	<p class="c3 title" id="h.nffckeme4us0"><span class="c8">VR and VR Experiments</span></p>
+	<p class="c6"><span class="c0">Jackson Kruger and Jackson Turner - CSCI5607 Final Project</span></p>
+	<p class="c6"><span>Code: </span><span class="c4"><a class="c9"
+				href="https://github.umn.edu/kruge203/FinalProject_CSCI5607/">https://github.umn.edu/kruge203/FinalProject_CSCI5607/</a></span><span>&nbsp;(compiled
+			executable can be found in the repository&rsquo;s releases)</span></p>
+	<h3 class="c10" id="h.8l5ob2n3z8qa"><span class="c2">Overview</span></h3>
+	<p class="c5"><span>It&rsquo;s almost unheard of for VR games to be created currently without using an engine like
+			Unity or Unreal Engine. Both of these have very good support for VR, and handle most OpenVR interactions for
+			the
+			game developer. Thus, we were curious what it would be like to access the C++ OpenVR interface directly in
+			our own
+			engine to create a VR game. Our goal with this project was to adapt one of our HW4 maze games (we used
+		</span><span class="c4"><a class="c9" href="../HW4/MazeGame.html">Jackson
+				Kruger&rsquo;s</a></span><span class="c0">) to support OpenVR and thus work with any SteamVR-compatible
+			VR headset.
+			Our most basic goal was ensuring that all functionality in HW4 was adapted to VR and worked nicely. This
+			meant full
+			room-scale interaction - using only the VR headset and VR controllers to complete the maze. Assuming we met
+			this
+			goal, our plan was then to investigate non-photorealistic rendering techniques, fractals, and, time
+			permitting,
+			handling out-of-bounds situations or anything else that came up.</span></p>
+	<p class="c6"><span class="c0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ultimately, we achieved all of these
+			goals, except for handling out-of-bounds situations, which there simply wasn&rsquo;t time for. Our final
+			result
+			supports all aspects of room-scale interaction: the VR controllers can be used to move through the maze, the
+			camera
+			moves appropriately as the user moves in the real-world, the controllers can be used to pick up and use
+			keys,
+			collision-detection works as it did before, etc. Getting this functionality working in VR proved to be much
+			more
+			difficult than expected. These challenges will be discussed below.</span></p>
+	<p class="c5"><span class="c0">Several non-photorealistic rendering techniques were added to the game, toggleable by
+			the press of a button on the controller. The primary NPR technique pursued was imitating halftoning, and
+			three
+			slightly different versions of this technique are included. An additional colorful (untextured) rendering
+			style is
+			also included.</span></p>
+	<p class="c5"><span>We also included fractal rendering (specifically the Mandelbrot set) as a possible
+			&ldquo;texture&rdquo; for objects in the environment. Ultimately this was used as the maze walls and on a
+			resizable
+			cube so users could examine a fractal at high detail.</span></p>
+	<h3 class="c10" id="h.d1cuwsjjxsjj"><span class="c2">Development Challenges</span></h3>
+	<p class="c6"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Simply getting anything to output to the VR
+			headset was a challenge in itself, even though Valve (thankfully) has a &lsquo;HelloVR&rsquo; sample
+			demonstrating
+			the basics of rendering to an OpenVR headset using the C++ API (found </span><span class="c4"><a class="c9"
+				href="https://github.com/ValveSoftware/openvr/blob/master/samples/hellovr_opengl/hellovr_opengl_main.cpp">here</a></span><span>).
+			We first tried simply copy/pasting relevant snippets from this sample into the existing main bootstrapper in
+			place
+			for the MazeGame. Try as we might, nothing but the glClearColor would render to the screen and companion
+			window. We
+			still don&rsquo;t know exactly why this didn&rsquo;t work. So we changed tactics--we took all of
+			Valve&rsquo;s code
+			and imported it into the maze game project. We then modified it as necessary to render the maze game in
+			place of
+			Valve&rsquo;s default scene. After some finicking with VAOs and the projection matrix, we finally got the
+			maze to
+			render to the companion window, then to the headset. </span><span class="c4"><a class="c9"
+				href="https://drive.google.com/open?id=1_XpGIzidX9DfuQKdRqR2FXR3MC0Gq51o">Here
+				is a video of our maze only rendering to the companion window.</a></span><span>. After some more
+			trial-and-error
+			matrix transformation adjustment for the world to view matrix, we got things oriented properly and rendering
+		</span><span class="c4"><a class="c9"
+				href="https://www.youtube.com/watch?reload=9&amp;v=038ual-NheI&amp;feature=youtu.be">to
+				both the headset and companion window </a></span><span class="c0">(though the companion window was
+			upside-down).</span></p>
+	<p class="c5"><span>The next step (after significantly refactoring Valve&rsquo;s code to integrate into the existing
+			codebase better) was properly supporting in-game movement control. In the existing MazeGame infrastructure,
+			every
+			game object&rsquo;s position, rotation, and scale is stored in a Transform matrix, which exists in a
+			hierarchy. So
+			previously, the camera&rsquo;s position was the parent of the player&rsquo;s, which was in turn the parent
+			of the
+			keys when picked up, of the player&rsquo;s bounding box, etc. This hierarchy had to be reworked for VR, as
+			the
+			&lsquo;camera&rsquo; (the VR headset), can move at-will in the real world, and the camera in the game
+		</span><span class="c11">must</span><span class="c0">&nbsp;also move appropriately. The new hierarchy had three
+			primary levels -
+			the &lsquo;world anchor&rsquo;, representing the center of the real world playspace&rsquo;s location in the
+			virtual
+			world, the headset&rsquo;s offset from the world anchor (which had to be updated continuously based on
+			headset
+			position from OpenVR), then the player. To move in the world, the world anchor is moved, which propagates
+			down the
+			transform hierarchy to the player and its bounding box.</span></p>
+	<p class="c5"><span>A major challenge that arose for the second time while adding in-world movement had to do with
+			the
+			difference in coordinate systems used by OpenVR vs the existing MazeGame code. The existing MazeGame code
+			used a
+			z-up, y-forward, x-right system, while OpenVR uses a y-up, negative z-forward, x-right system. This
+			difference was
+			the likely cause much of the initial trouble getting anything to render to the headset. Even after we got
+			output to
+			the headset, the world was rotated </span><span class="c4"><a class="c9"
+				href="https://drive.google.com/open?id=1uFE6VzUzNS_6OBzolp-uqGqCq4qPtpjI">as
+				in this video</a></span><span class="c0">. After much digging, we finally found a bit in OpenVR&rsquo;s
+			main header
+			explaining their coordinate system, so we applied a 90-degree rotation about the x-axis to the
+			view-projection
+			matrix and called it good. This issue popped up again, however, when mapping the headset&rsquo;s position to
+			a
+			transform for use in-game. The transformation didn&rsquo;t work as expected, so we hacked things together so
+			it
+			would work and moved on. The issue popped up again for the third time when we adding the VR controllers to
+			the game.
+			After more troubleshooting, we finally realized why transformations generally weren&rsquo;t working as
+			expected:
+			glm&rsquo;s transformation functions right-multiply their input matrix parameter by the transformation
+			instead of
+			left-multiplying. After verifying that our transformation matrices for OpenVR to world and the other way
+			were
+			multiplied in the correct order, the coordinate-system issue finally solved. After this, development was
+			still
+			generally slow but went much more smoothly (adding OpenVR controller inputs, dealing with bounding-box
+			collision
+			issues, etc).</span></p>
+	<p class="c5"><span class="c0">Fractals were surprisingly easy to implement once some minor issues with textures and
+			incorrect uniform declarations were resolved. We did have a challenge in creating the resizable fractal
+			display cube
+			that is featured in the game, as getting the top plane of the cube to not come constantly closer to the
+			player
+			required some clever hacking.</span></p>
+	<h3 class="c10" id="h.1vm538esskf"><span class="c2">Connection to Class</span></h3>
+	<p class="c5"><span class="c0">When we started this project we were inspired by lectures like the ones on 3d
+			displays,
+			VR, non photorealism, and others. Our project eventually included many topics of graphics like shaders,
+			transform
+			hierarchies, the VR specific rendering pipeline, unique sampling and reconstruction methods, and more.
+		</span></p>
+	<h3 class="c10" id="h.w70b4bw6oxyt"><span class="c2">Key Features</span></h3>
+	<ul class="c13 lst-kix_x8xx8t6ffyfe-0 start">
+		<li class="c1"><span>All of the features listed on </span><span class="c4"><a class="c9"
+					href="../HW4/MazeGame.html">this
+					page</a></span><span class="c0">&nbsp;still work, except for jumping and crouching via external keys
+				(which are
+				unnecessary in VR), and keys animating while on the ground (for performance reasons)</span></li>
+		<li class="c1"><span class="c0">Free roomscale movement - walking in the real world walks in game</span></li>
+		<li class="c1"><span class="c0">VR controllers are rendered using the model provided by OpenVR</span></li>
+		<li class="c1"><span class="c0">VR controller inputs: bindings for picking up and dropping keys, moving in the
+				world
+				using a trackpad or joystick, controller positions, haptic vibrations when grabbing objects, and
+				toggling shader
+				mode via button press</span></li>
+		<li class="c1"><span class="c0">Using the VR controllers to pick up and use keys (can hold one key per
+				controller)</span></li>
+		<li class="c1"><span class="c0">Companion window rendering in addition to rendering within VR</span></li>
+		<li class="c1"><span class="c0">Four additional non-photorealistic rendering modes: three variations of
+				halftoning,
+				one interesting colored one. All were implemented within the fragment shader&rsquo;s GLSL.</span></li>
+		<li class="c1"><span class="c0">All fractals featured are calculated and rendered in real time through GLSL
+				shaders.</span></li>
+		<li class="c1"><span class="c0">A cube with fractals on the sides can be grabbed by the VR controller and
+				resized by
+				pulling the trigger on the other controller, allowing users to examine the fractals in an interactive
+				manor.</span></li>
+	</ul>
+	<p class="c6"><span>Demonstrations of all of these features are provided in </span><span class="c4"><a class="c9"
+				href="https://docs.google.com/presentation/d/1chAY563wB09EV9CRSew_Gtod6h6KZBpmCfRvFtdCwpc/edit?usp=sharing">this
+				presentation</a></span><span>.</span><span class="c0">&nbsp;The earlier parts of this presentation show
+			development
+			difficulties, while the later parts more fully demonstrate the achieved features.</span></p>
+	<h3 class="c10" id="h.usemok74twyg"><span class="c2">Future Work</span></h3>
+	<p class="c6"><span class="c0">Much of the work done on this project was less about making a game, and more about
+			basically creating a game engine that supports VR. As such, the existing game could be significantly
+			extended, or
+			different games altogether could be created using this same engine, now that interaction with OpenVR is
+			largely
+			taken care of. For the existing game, there&rsquo;s also lots of room for improvement when it comes to
+			performance -
+			many decisions were made during development for quick &amp; dirty solutions instead of highly performant
+			ones.
+		</span></p>
+	<p class="c6 c12"><span class="c0"></span></p>
+	<p class="c6"><span>There is also lots of room to improve the rendering methods used in the game. Bump maps, normal
+			maps, reflection and refraction, more lights, depth rendering, procedural textures, and more could all be
+			added to
+			this project. We also wanted to investigate how to handle out-of-bounds situations when the user physically
+			moves
+			out of valid virtual space and what to do when that occurs. Additionally, the fractals could be expanded
+			into 3d
+			which would be extremely interesting to investigate in VR. Better controls for scaling fractals could also
+			be
+			implemented to great effect.</span></p>
+</body>
+
+</html>

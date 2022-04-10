@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5607/HW2/Raytracer.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:20:12 GMT -->
+<head>
+		<title>HW2</title>
+		<link rel="stylesheet" href="../../style.css">
+	</head>
+	<body>
+		<a href="../index.html"> .. </a>
+		<h2>Homework 2 - Basic Raytracer</h2>
+		<p><i>Jackson Kruger</i></p>
+    <p>
+      Normally, the source code would be on <a href="https://github.umn.edu/kruge203/CSCI5607/tree/master/Raytracer">Github</a>,
+        but because of some issues that popped up last-minute, <a href="Raytracer_src.zip" download>here's</a> a zip of the code used for the images seen here currently. <br>
+      For this assignment, unlike my previous two, I did this development on Windows in Visual Studio.
+    </p>
+    <h4>Currently functional features (which should be apparent form the outputs below)</h4>
+    <p>
+      <ul>
+        <li>Camera placement, film resolution, aspect ratio</li>
+        <li>User specified background colors</li>
+        <li>BMP output</li>
+        <li>Spheres</li>
+        <li>Ambient lights, point lights, shadows, multiple lights</li>
+        <li>Basic sampling</li>
+        <li>Diffuse, specular, ambient, and (recursive) reflective lighting</li>
+      </ul>
+    </p>
+    <h4>Architecture Overview</h4>
+    <p>
+      The file containing main, Raytracer.cpp, only exists to kick things off. It tells <b>Parser</b> what file to parse, who then initializes the relevant
+			objects and sets appropriate values. The most important objects it initializes are the <b>Renderer</b>, the <b>Scene</b>, and the <b>Camera</b>.
+			The <b>Scene</b> contains all of the lights and shapes (<b>SceneObject</b>s), while the camera primarily exists to construct the rays.
+			The <b>Renderer</b> is the bridge between the <b>Camera</b> and the <b>Scene</b>, as well as the final <b>Image</b>
+      object that is used to output at the end. It iterates over width and height, telling the camera to construct the rays, getting the colors
+      of the pixels from the <b>Scene</b>, then setting the pixels of the <b>Image</b>. The <b>Scene</b> iterates through its list of pointers to <b>SceneObjects</b>, telling
+			each sceneobject to intersect with the current <b>Ray</b>, producing an <b>Intersection</b>. <b>Intersection</b>s currently are just a struct of <b>Vector3</b>s and a <b>Material</b>,
+			but will soon be objects in their own right with a pointer to the <b>Ray</b> and <b>SceneObject</b> who produced it, as well as a <b>Vector3</b> for the normal.
+    </p>
+		<h4>Challenges So Far</h4>
+		<ul>
+			<li>The direction for the camera defined in the scene file confused me, particularly when it was posted that this direction is actually from the
+			viewing plane to the camera. My raycasting was working imagining the direction as being from the camera to the plane, but it was horizontally flipped.
+			I tried for quite a while to find a mistake in my ray generation code to accomodate literally flipping the direction vector on parsing, but that simply
+			turned the camera around. In the end I just fixed the horizontal flippage with a little hack, multiplying by -1 in the right place.</li>
+			<li>Refraction has been architecturally painful so far, as I've prepared to implement it.</li>
+			<li>The exact meaning of max_depth wasn't clear initially, whether it meant that many reflections (rays + 1) or that many rays total. I wasted some time debugging
+			my recursive reflections before realizing that I was interpreting max_depth as the max number of rays to generate total, not the max number of bounces.</li>
+		</ul>
+		Besides these pains, I focused pretty heavily on the architecture at the beginning and I think it really paid off. Features that seemed like they'd be difficult
+		to implement often ended up being very quick.
+    <h3>Output Images</h3>
+    <h4>Sample scenes</h4>
+    <p>
+      The following are the rendered outputs of the provided sample scenes. The only modifications I made to these before running them
+        were commenting out the output_image line as I haven't yet bothered to parse desired output_image location. I currently just output
+        in the working directory to a file called "raytraced.bmp".
+    </p>
+    <img src="images/ambient_sphere.bmp">
+    <img src="images/spheres1.bmp">
+    <img src="images/spheres2.bmp">
+    <h4>Custom scenes</h4>
+    <p>
+      Each of these is just a sample scene with another point_light added.
+    </p>
+    <img src="images/litDiffuseSphere.bmp">
+    <img src="images/spheres3.bmp">
+    <img src="images/spheres4.bmp">
+	<h4>Resolution and Aspect Ratio</h4>
+	<p> These are just to show that my Raytracer can handle odd FOV's and resolutions (they have hover text)</p>
+	<img src="images/lowRes.bmp" title="film_resolution 100 100">
+	<img src="images/megaTall.bmp" title="film_resolution 100 400">
+	<img src="images/megaWide.bmp" title="film_resolution 400 100">
+	<img src="images/FOV10.bmp" title="Camera FOV set to 10">
+	<img src="images/FOV75.bmp" title="Camera FOX set to 75">
+		<!-- <p> A compiled executable for Ubuntu can be found here: <a href="" download> </a> </p> -->
+	<div style="font-weight: normal; clear: both; margin-top: 25px; font-size: small; font-style: italic;"><p>The views and opinions expressed in this page are strictly those of the page author.<br>The contents of this page have not been reviewed or approved by the University of Minnesota.</p></div></body>
+
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5607/HW2/Raytracer.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:20:14 GMT -->
+</html>

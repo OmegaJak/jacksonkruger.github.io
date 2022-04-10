@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5611/Final Project/SoundSimulation.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:26:55 GMT -->
+<head>
+	<title>Sound Synthesis and Propagation</title>
+	<link rel="stylesheet" href="../../style.css">
+	<style>
+		video {
+			height: 450px;
+		}
+
+		table {
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			padding: 3px;
+		}
+	</style>
+</head>
+
+<body>
+	<a href="../index.html">..</a>
+	<h1>Final Project - Physical Sound Synthesis and Propagation Simulation</h1>
+	<p><i>Jackson Kruger and Xinghua Hao</i></p>
+
+	<p>
+		The source code for this simulation can be found <a href="https://github.umn.edu/hao00022/CSCI5611_FINAL">on Github</a>.
+		A zip of the compiled executables and supporting files for the simulation
+		can be downloaded <a href="SoundSimulation.zip" download>here</a>. We wrote this simulation with C++ OpenGL, based off of 
+		my <a href="../HW2/PhysicalSimulation.html"> cloth simulation</a>.
+	</p>
+
+	<h2>Overview</h2>
+	<img width=20% src="SoundSimulation.png">
+	<p>
+		The goal of this project was to combine a physically-based sound synthesis simulation with a physically-based sound propagation simulation. The sound is
+		derived from the velocities at various points on the different strings, which are being executed using a compute shader. The simulation then shoots out
+		rays in all directions to determine what paths the sound would take to reach the listener's ears. The generated audio is then adjusted accordingly
+		(delayed, made quieter) and is played through SDL.
+
+	</p>
+	<h3>Report</h3>
+	<p>
+		A more detailed report covering the project goals, difficulties encountered, and so forth can be found in <a href="https://docs.google.com/document/d/1Sv7RX5JsLwhLZUu9aMs-d1dHucdM46HEipOXeuz8fHE/edit?usp=sharing">this Google doc</a>.
+		The report is also embedded below.
+	</p>
+	<iframe style="
+    height: 30em;
+    width: 50%;
+    margin: auto;
+    min-width: 40em;"
+		src="https://docs.google.com/document/d/e/2PACX-1vTMofjKL0Wex8BBTKwaiwptudiMTNXSsU2x5OZApXo0hOCvQoL700mJ8pNHw9yy_aWVDXqaDoesNG3t/pub?embedded=true"></iframe>
+
+	<h2>Images and Videos</h2>
+	<p>
+		Main demo video
+		<br>
+		<em>Note: The audio may be very quiet when played through low-quality speakers like laptop speakers... The volume of the first few notes played should
+			be on par with the typical volume of other things played through the same speakers at the same volume. Headphones are recommended. Sounds later in the video
+			when the listener moves away from the audio source will be quiet. Unfortunately, a popping sound in the audio is normal.
+		</em>
+		<br>
+		<iframe width="560" height="315" src="https://www.youtube.com/embed/zK99IArkMZI" frameborder="0"
+			allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+		<br><br>
+		A more detailed video going through the (disappointingly small) range of sounds that can be made through real-time parameter tuning. Parameters and other info
+		are shown in the title bar of the simulation's window.
+		<br>
+		WARNING: Some of the sounds produced may be unpleasant with headphones on at high volume
+		<br>
+		<video controls>
+			<source src="Videos/ParameterTuning.mp4" type="video/mp4">
+		</video>
+
+		<br><br>
+		A string running in ultra slow-mo
+		<br>
+		<video controls>
+			<source src="Videos/SlowMo.mp4" type="video/mp4">
+		</video>
+	</p>
+
+	<h2>Tools/Libraries Used</h2>
+	<p>
+		This cloth simulation is based on C++ OpenGL with a GLSL compute shader. We wrote it for Windows in Visual Studio. <a href="https://www.libsdl.org/">SDL</a>
+		is used to interface with Windows (displaying the window, outputting audio). 
+		The library <a href="https://www.libsdl.org/projects/SDL_image/">SDL_Image</a> is used to load textures.
+		<a href="https://glad.dav1d.de/">Glad</a> is used as an interface to OpenGL.
+		<a href="https://glm.g-truc.net/0.9.9/index.html">GLM</a> is used for math-related things.
+		Credit to Pink Floyd for our texture for The Walls.
+		Credit (& thanks) to Professor Stephen J. Guy at the University of Minnesota for the code this simulation was originally based on.
+	</p>
+
+	<h2>Fun Mistakes</h2>
+	<div>
+		<i>Stably Unstable</i><br>
+		<video controls>
+			<source src="Videos/StablyUnstable.mp4">
+		</video>
+
+		<br><br>
+
+		<i>LOUD & UNPLEASANT AUDIO WARNING</i><br>
+		<video controls>
+			<source src="Videos/HEADPHONESWARNING.mp4">
+		</video>
+	</div>
+<div style="font-weight: normal; clear: both; margin-top: 25px; font-size: small; font-style: italic;"><p>The views and opinions expressed in this page are strictly those of the page author.<br>The contents of this page have not been reviewed or approved by the University of Minnesota.</p></div></body>
+
+
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5611/Final Project/SoundSimulation.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:27:07 GMT -->
+</html>

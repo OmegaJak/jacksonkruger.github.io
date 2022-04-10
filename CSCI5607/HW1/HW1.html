@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5607/HW1/HW1.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:19:40 GMT -->
+<head>
+	<title>HW1</title>
+	<link rel="stylesheet" href="../../style.css">
+	<style>
+		img {
+			height: 200px;
+		}
+	</style>
+</head>
+
+<body>
+	<a href="../index.html"> .. </a>
+	<h2>Homework 1 - Image Processing</h2>
+	<p><i>Jackson Kruger</i></p>
+	<p>
+		Initial work for this went smoothly - cmake made compilation very simple and straightforward. This took a very long time overall, 
+		and many mistakes were made along the way. They're detailed in the rightmost column.
+		<br><br>
+		Some of the effects aren't obvious due to the size the images are displayed at, so if something doesn't seem right, open the image in a new tab
+		or save & open the image. Additionally, all of the input and output images are available 
+		<a href="../../HW1/input/index.html">here</a> and <a href="../../HW1/output/index.html">here</a>,
+		respectively.
+	</p>
+	<p>
+		Source code is on <a href="https://github.umn.edu/kruge203/CSCI5607/tree/master/HW1">Github</a>. <a href="https://github.umn.edu/kruge203/CSCI5607/blob/master/HW1/src/image.cpp">image.cpp</a>
+	</p>
+	<p>A compiled executable for Ubuntu can be found here: <a href="Image.out" download> Image.out</a> </p>
+	<table>
+		<tr>
+			<th>Feature</th>
+			<th>Argument(s)</th>
+			<th>Input Image</th>
+			<th>Output Image</th>
+			<th>Comments</th>
+		</tr>
+		<tr>
+			<td>Brighten</td>
+			<td>-brightness 1.5</td>
+			<td><img src="input/cube.jpg"></td>
+			<td>
+				<table class="inner">
+					<tr>
+						<td><img src="output/bright_cube.jpg"></td>
+						<td><img src="output/very_bright_cube.jpg"></td>
+					</tr>
+					<tr>
+						<td>1.5</td>
+						<td>2.5</td>
+					</tr>
+				</table>
+			</td>
+			
+		</tr>
+		<tr>
+			<td>Random Noise</td>
+			<td>-noise 0.5</td>
+			<td><img src="input/cube.jpg"></td>
+			<td>
+				<table class="inner">
+					<tr>
+						<td><img src="output/noise_0.5_cube.png"></td>
+						<td><img src="output/noise_1.0_cube.png"></td>
+						<td><img src="output/noise_2.0_cube.png"></td>
+					</tr>
+					<tr>
+						<td>0.5</td>
+						<td>1.0</td>
+						<td>2.0</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>Crop</td>
+			<td>-crop 50 50 200 300</td>
+			<td><img src="input/cube.jpg"></td>
+			<td><img src="output/crop_cube.jpg"></td>
+		</tr>
+		<tr>
+			<td>Extract Channel</td>
+			<td>-extractChannel 1</td>
+			<td><img src="input/cube.jpg"></td>
+			<td><img src="output/extracted_cube.jpg"></td>
+		</tr>
+		<tr>
+			<td>Contrast</td>
+			<td>-contrast 0.1</td>
+			<td><img src="input/cube.jpg"></td>
+			<td>
+				<table class="inner">
+					<tr>
+						<td><img src="output/contrast_0.1_cube.jpg"></td>
+						<td><img src="output/contrast_1.75_cube.jpg"></td>
+					</tr>
+					<tr>
+						<td>0.1</td>
+						<td>1.75</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<p> I had a great deal of trouble implementing contrast, as I initially thinking about it completely wrong.
+					I was calculating the average luminance of the whole picture, then calculating the difference between that and each pixel's luminance.
+					I then multiplied that difference by the contrast factor, and added it to the average luminance. I considered green and blue as function of red.
+					I then did some algebraic manipulation to calculate the red value necessary to get the desired luminance, and calculated green and blue from that red.
+					This method produced some very interesting results, shown below.
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td>Saturation</td>
+			<td>-saturation 0.1</td>
+			<td><img src="input/cube.jpg"></td>
+			<td>
+				<table class="inner">
+					<tr>
+						<td><img src="output/saturation_0.1_cube.jpg"></td>
+						<td><img src="output/saturation_2.0_cube.jpg"></td>
+						<td><img src="output/saturation_5.0_cube.jpg"></td>
+					</tr>
+					<tr>
+						<td>0.1</td>
+						<td>2.0</td>
+						<td>5.0</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>Quantize</td>
+			<td>-quantize 1</td>
+			<td><img src="input/cube.jpg"></td>
+			<td>
+				<table class="inner">
+					<tr>
+						<td><img src="output/quantized_1_cube.jpg"></td>
+						<td><img src="output/quantized_2_cube.jpg"></td>
+						<td><img src="output/quantized_4_cube.jpg"></td>
+					</tr>
+					<tr>
+						<td>1</td>
+						<td>2</td>
+						<td>4</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<p>
+					I first implemented quantization incorrectly, scaling as if the passed value was the max color value, not the number of bits.
+					It was a pretty simple adjustment to my math to operate correctly (just calculate maxValue as 2^n - 1).
+					<br><br>
+					I didn't realize the function PixelQuant() was given to us after I finished implementing my own quantization. They're functionally
+					similar but not identical. I switched over to PixelQuant().
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td>Random Dither</td>
+			<td>-randomDither 1</td>
+			<td><img src="input/cube.jpg"></td>
+			<td>
+				<table class="inner">
+					<tr>
+						<td><img src="output/randomDither_1_cube.png"></td>
+						<td><img src="output/randomDither_2_cube.png"></td>
+						<td><img src="output/randomDither_4_cube.png"></td>
+					</tr>
+					<tr>
+						<td>1</td>
+						<td>2</td>
+						<td>4</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>Floyd-Steinberg dither</td>
+			<td>-FloydSteinbergDither 1</td>
+			<td><img src="input/cube.jpg"></td>
+			<td>
+				<table class="inner">
+					<tr>
+						<td><img src="output/floyd_1_cube.png"></td>
+						<td><img src="output/floyd_2_cube.png"></td>
+						<td><img src="output/floyd_4_cube.png"></td>
+					</tr>
+					<tr>
+						<td>1</td>
+						<td>2</td>
+						<td>4</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<p>I got some very poor results when I had accidentally flipped the order of subtraction for calculating error, but discovered my mistake quickly.<br><br>
+				   I had a lot of trouble for an unknown reason when I tried to implement this using a struct I created, PrecisePixel, to increase the accuracy of 
+					dithering. In the end this didn't prove worth it and I reverted to a simpler implementation.<br><br>
+				   Differences between the dithering levels may not be apparent unless the images are opened at full resolution.
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td>Blur</td>
+			<td>-blur 2</td>
+			<td><img src="input/cube.jpg"></td>
+			<td>
+				<table class="inner">
+					<tr>
+						<td><img src="output/blur_2_cube.png"></td>
+						<td><img src="output/blur_8_cube.png"></td>
+						<td><img src="output/blur_16_cube.png"></td>
+					</tr>
+					<tr>
+						<td>2</td>
+						<td>8</td>
+						<td>16</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<p>I implemented a Gaussian convolution for this, and it's performed separably. The filter is scaled by the number inputted.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>Sharpen</td>
+			<td>-sharpen 2</td>
+			<td><img src="input/cube.jpg"></td>
+			<td>
+				<table class="inner">
+					<tr>
+						<td><img src="output/sharpen_2_cube.png"></td>
+						<td><img src="output/sharpen_8_cube.png"></td>
+						<td><img src="output/sharpen_16_cube.png"></td>
+					</tr>
+					<tr>
+						<td>2</td>
+						<td>8</td>
+						<td>16</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<p>Implementing sharpening after implementing blur was trivial.</p>
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="3">Edge Detect</td>
+			<td rowspan="3">-edgeDetect</td>
+			<td><img src="input/cube.jpg"></td>
+			<td><img src="output/edgeDetect_cube.png"></td>
+			<td rowspan="3">
+				<p>
+					I used a modified sobel filter for my edge detection. I also reduce saturation to 0 before processing, and added 1 level of blur.
+					My implementation uses the sobel filters plus two complementary filters to detect edges it wouldn't otherwise. (If I remember correctly,
+					before I added these it only detected bottom and left edges). 
+					<br><br>
+					I tried numerous other combinations of effects like decreasing brightness and/or
+					contrast before edge detecting then increasing them afterwards, but I was usually only able to produce better effects for specific images.
+					A combination of pre/post-processing effects that looked good for one image didn't for another. So I found doing minimal other processing to give
+					the most generally pleasing result.
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td><img src="input/lena.gif"></td>
+			<td><img src="output/edgeDetect_lena.png"></td>
+		</tr>
+		<tr>
+			<td><img src="input/checkerboard.png"></td>
+			<td><img src="output/edgeDetect_checker.png"></td>
+		<tr>
+			<td rowspan="2">Scale</td>
+			<td>-scale 10 10</td>
+			<td><img src="input/tiny_cube.png"></td>
+			<td>
+				<table class="inner">
+					<tr>
+						<td><img src="output/scale_sampling_0_tcube.png"></td>
+						<td><img src="output/scale_sampling_1_tcube.png"></td>
+						<td><img src="output/scale_sampling_2_tcube.png"></td>
+					</tr>
+					<tr>
+						<td>Point<br>(-sampling 0)</td>
+						<td>Bilinear Interpolation<br>(-sampling 1)</td>
+						<td>Gaussian<br>(-sampling 2)</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<p>
+					Note that these are all css-scaled to be the same size, though the output images are actually 10 times as big as the input in each direction.
+					The input image is actually only 45x34 pixels. The images can be saved or opened in separate tabs to see this.
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td>-scale 0.25 0.25</td>
+			<td><img src="input/perfect_checkerboard.png"></td>
+			<td>
+				<table class="inner">
+					<tr>
+						<td><img src="output/scale_sample_0_perfect.png"></td>
+						<td><img src="output/scale_sample_1_perfect.png"></td>
+						<td><img src="output/scale_sample_2_perfect.png"></td>
+					</tr>
+					<tr>
+						<td>Point<br>(-sampling 0)</td>
+						<td>Bilinear Interpolation<br>(-sampling 1)</td>
+						<td>Gaussian<br>(-sampling 2)</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<p>
+					These illustrate the special case of reducing size by a power of two for point sampling and bilinear sampling.
+					<br><br>
+					Note that the input image when viewed separately is in fact a perfect checkerboard, alternating black/white each pixel.
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td>Rotate</td>
+			<td>-rotate 45</td>
+			<td><img src="input/cube.jpg"></td>
+			<td>
+				<table class="inner">
+					<tr>
+						<td><img src="output/rotate_45_cube.png"></td>
+						<td><img src="output/rotate_270_cube.png"></td>
+						<td><img src="output/rotate_353_cube.png"></td>
+					</tr>
+					<tr>
+						<td>45</td>
+						<td>270</td>
+						<td>353</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<p>
+					I had a lot of trouble with off-by-one style errors near the edges when rotating by a factor of 90 deg. I had to do a bit of a hack to fix it.
+					<br><br>
+					The image grows to accomodate the rotation, background is set to trasparent black (which renders white on the website).
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="2">Fun</td>
+			<td rowspan="2">-fun</td>
+			<td><img src="input/cube.jpg"></td>
+			<td><img src="output/fun_cube.png"></td>
+		</tr>
+		<tr>
+			<td><img src="input/lena.gif"></td>
+			<td><img src="output/fun_lena.png"></td>
+		</tr>
+		<tr>
+			<td>"Purplifier"</td>
+			<td></td>
+			<td></td>
+			<td>
+				<table class="inner">
+					<tr>
+						<td><img src="output/purpled_cube.jpg"></td>
+						<td><img src="output/purpled_hopkins.jpg"></td>
+						<td><img src="output/purpled_ray.jpg"></td>
+					</tr>
+					<tr>
+						<td><img src="output/purpled_millcity.jpg"></td>
+						<td><img src="output/purpled_cube.jpg"></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<p>
+					These were some fun mistake outputs while I was working on contrast. It was basically reinterpreting the image in terms of the luminance 
+					function, with some interpolation. The code is at the bottom of image.cpp in a method called "Purplify".
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td><img src="output/trippy_cube.jpg"></td>
+			<td>Another fun mistake</td>
+		</tr>
+	</table>
+<div style="font-weight: normal; clear: both; margin-top: 25px; font-size: small; font-style: italic;"><p>The views and opinions expressed in this page are strictly those of the page author.<br>The contents of this page have not been reviewed or approved by the University of Minnesota.</p></div></body>
+
+
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5607/HW1/HW1.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:20:12 GMT -->
+</html>

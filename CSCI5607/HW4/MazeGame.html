@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5607/HW4/MazeGame.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:20:22 GMT -->
+<head>
+	<title>HW4</title>
+	<link rel="stylesheet" href="../../style.css">
+</head>
+
+<body>
+	<a href="../index.html"> .. </a>
+	<h2>Homework 4 - OpenGL Maze Game</h2>
+	<p><i>Jackson Kruger</i></p>
+	</p>
+	<p>
+		Source code can be found on <a href="https://github.umn.edu/kruge203/CSCI5607/tree/2a5d62f126579dae5b88a17b4a6e5ce8e89b2a33/MazeGame">Github</a> (note: this is a version of the repository at the last commit
+		I did before HW4 was due. In my current repository changes may have been made).
+		I developed this game in Visual Studio on Windows. A zip of the compiled executable for Windows and the necessary assets can be found here: <a href="MazeGame.zip" download>MazeGame.zip</a>.
+	</p>
+	<h4>Core Features</h4>
+	<p>
+		<ul>
+			<li>Everything in the game (Walls, Doors, Keys, etc) has a unique rendering in the form of a model and either a texture or a color.</li>
+			<li>Keys can be picked up and used to open doors</li>
+			<li>The user is able to control the character using WASD, arrow keys, and/or the mouse</li>
+			<li>Collision detection</li>
+			<li>The scene is lit using ambient, diffuse, and some specular lighting.</li>
+		</ul>
+	</p>
+	<h4>Additional Features</h4>
+	<p>
+		<ul>
+			<li>Walls, floors, and ceiling are texture mapped</li>
+			<li>Integrated keyboard and mouse control</li>
+			<li>Jumping (space bar)</li>
+			<li>Animated door opening</li>
+			<li>Everything is represented by models</li>
+			<li>Simple OBJ loading (the key [Mjolnir.obj] and the goal [goal_crystal.obj] are loaded as OBJ's)</li>
+		</ul>
+	</p>
+	<h4>Other Misc. Features</h4>
+	<p>
+		<ul>
+			<li>Maximizing on load</li>
+			<li>Command line arguments to control which map is loaded and window resolution</li>
+			<li>Crouching (left ctrl key)</li>
+			<li>Key dropping (g key)</li>
+			<li>Keys spin and float in place when not in inventory</li>
+			<li>Custom models for the keys and the goal</li>
+		</ul>
+	</p>
+	<h4>Technical Overview</h4>
+	<p>
+		This game makes use of <a href="https://www.libsdl.org/download-2.0.php">SDL2</a>, <a href="https://glm.g-truc.net/">glm</a>, <a href="https://glad.dav1d.de/">Glad</a>, and (of course) OpenGL. As should be apparent in the code (on GitHub),
+		I made an effort to keep concerns within the game appropriately separated, so the main file, MazeGame.cpp, is really just a bootstrapper for the rest of the game. There are three main 'managers' 
+		used to set up OpenGL data properly - ModelManager, ShaderManager, and TextureManager. The MapLoader parses map files and adds the appropriate GameObjects to a Map. Each GameObject has a pointer
+		to its Model, which stores the relevant vert and texture data (and registers itself with the ModelManager). Keys and Doors and such are subclasses of GameObject. The Camera and the
+		Player are separate classes, where the player handles movement, user inputs, and collisions, while the Camera tracks its relevant matrices and tells the shader what to use for the view matrix.
+		<br><br>
+		All position information is stored in Transforms (inspired by Unity). Every GameObject has a transform, which is really just a 4x4 matrix in homogeneous coordinates, that stores position, rotation,
+		scale, etc. A full transform hierarchy is also supported in the game - every transform may have at most one parent and any number of children. Each transform tracks its local transformation, and automatically
+		updates its world transform matrix when its parent changes. The Player's transform is a child of the Camera's transform. When Keys are picked up, they are parented to the player's transform.
+		<br><br>
+		Collision detection in the game is implemented solely through axis-aligned bounding boxes. Every GameObject has a BoundingBox, whose transform is a child of the GameObject's transform.
+		Each frame, the Player checks with the Map to see if it's intersecting any Walls or Keys, and acts accordingly if so. When a Key is held, it is checking with the Map to see if it's
+		intersecting the matching Door. The Player's BoundingBox is regenerated when the player rotates to ensure the BoundingBox remains axis-aligned.
+	</p>
+	<h4>Challenges</h4>
+	<p>
+		The most difficult parts of the game to implement were the Transform hierarchy (for good reasons) and the BoundingBoxes (for less good reasons). I initially implemented the
+		transform hierarchy using raw pointers to children and parents, which took a very long time to get working. Of course, <i>after</i> I got the raw pointers working I decided
+		to switch to using C++ smart pointers. BoundingBoxes gave me trouble because I used my implementation from an abandoned version of my Raytracer. I assumed the BoundingBoxes worked.
+		It took me far too long to realize that they didn't, for very simple reasons.
+	</p>
+	<h4>Video Demo</h4>
+	<p>This was a friend playing the game for the first time. All of the game's features can be seen in this video. A few timestamps for specific features:
+		<ul>
+			<li>Jumping - 0:12</li>
+			<li>Crouching - 0:22</li>
+			<li>Key pickup - 0:54</li>
+			<li>Key opening door - 1:49</li>
+		</ul>
+		Other features should be readily apparent from the rest of the video.
+	</p>
+	<iframe width="560" height="315" src="https://www.youtube.com/embed/jqCIsL7zDLU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+	allowfullscreen></iframe>
+	<h4>Notes & Known Issues</h4>
+	<p>
+		<ul>
+			<li>The controls are printed in the console that's opened when the game is started. Add '-m' or '-w' at the command line to get command line usage printed.</li>
+			<li>There are sometimes flickering lines at the seams between walls</li>
+			<li>Collision with walls is 'grippy', making it hard to move parallel to walls if you're right next to them.
+				This would have been rather difficult to fix given my Transform and BoundingBox-based collision system.</li>
+			<li>It may be possible to put a drop a key inside the wall and be unable to win the game.</li>
+			<li>Key rotation may vary by map</li>
+		</ul>
+	</p>
+	<h4>Fun Mistakes (I'm counting these as artistic screenshots)</h4>
+	<p>
+		Results of Incorrect OBJ loading:<br>
+		<img src="model1.png" width="400">
+		<img src="model2.png" width="400">
+		<img src="model3.png" width="400">
+		<img src="model4.png" width="400"><br>
+
+
+		Some strange & incorrect camera movement math:<br>
+		<img src="Good%20Camera.gif" width="400"><br>
+
+		From when I had the wrong version of Glad:<br>
+		<img src="Spaz.gif" width="400">
+	</p>
+<div style="font-weight: normal; clear: both; margin-top: 25px; font-size: small; font-style: italic;"><p>The views and opinions expressed in this page are strictly those of the page author.<br>The contents of this page have not been reviewed or approved by the University of Minnesota.</p></div></body>
+
+
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5607/HW4/MazeGame.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:20:23 GMT -->
+</html>

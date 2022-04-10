@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5611/HW1/ParticleSystem.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:20:24 GMT -->
+<head>
+	<title>HW1</title>
+	<link rel="stylesheet" href="../../style.css">
+	<style type="text/css">
+		img {
+			height: 400px;
+		}
+	</style>
+</head>
+
+<body>
+	<a href="../index.html"> .. </a>
+	<h2>Homework 1 - Particle System</h2>
+	<p><i>Jackson Kruger</i></p>
+	<p>
+		The source code for this can be found <a href="https://github.umn.edu/kruge203/CSCI5611/tree/master/Particle System/ParticleSystem">on Github</a>.
+		I developed this particle system in Visual Studio on Windows. A zip of the compiled executable and supporting files can be downloaded <a href="JacksonKrugerParticleSystem.zip" download>here</a>.
+	</p>
+	<h4>Features</h4>
+	<p>
+		<ul>
+			<li>3 primary simulation dynamics - "Free Mode", "Sunlauncher Mode" (a magic spell), and "Water Mode"</li>
+			<li>Context - The water simulation contains a pipe to shoot the water, as well a silhouette person for scale reference (as the sim scale is rather huge)			</li>
+			<li>Full 3D user-controlled camera (WASD, up/down, mouse control)
+				<ul><li>
+					<i>Visible in any video below</i>
+				</li></ul>
+			</li>
+			<li>Particle-obstacle interactions besides the ground
+				<ul>
+					<li>In the water simulation, the gravity center acts as an obstacle for the water
+						<ul><li>
+								<i>Visible in the water hose video at time 0:15</i>
+						</li></ul>
+					</li>
+					<li>In all simulations (but noticeably in the free mode sim) there's a 10,000x10,000 bounding box obstacle bounce off of
+						<ul><li>
+							<i>Visible in <a href="https://drive.google.com/file/d/1QpoNWrgtIIsNJZnw7KR0MRJ0XKnAJ3d6/view?usp=sharing">this</a> video</i>
+						</li></ul>
+					</li>
+				</ul>
+			</li>
+			<li>Textured sprites for all particles
+				<ul>
+					<li>Every particle has a simple circle texture applied, with absolute transparency outside the circle's edges. Because I'm
+						using GL_POINTS to render the particles, they would otherwise render as opaque squares.
+						<ul><li>
+							<i>A close-up (paused) view of particle can be found in the water hose video at time 1:04</i>
+						</li></ul>
+					</li>
+				</ul>
+			</li>
+			<li>All benchmarks - I easily ran ~8 million (2^23) particles at 60FPS on my GTX 1070.
+				<ul>
+					<li>The submitted systems have the number of particles hardcoded to 2^23</li>
+					<li>I also found that I could 16M (2^24) at 60FPS. At 32M the framerate finally tanks.</li>
+					<li><i>Performance, number of particles, and other info is displayed in the status bar of every video and image.</i></li>
+				</ul>
+			</li>
+			<li>Continuous mouse-based user interaction with the system(s)
+				<ul>
+					<li>Only "Free Mode" and "Water Mode" allow this interaction. When the user clicks, a force is applied relative to that point to all particles.</li>
+					<li><i>This is readily apparent in any free mode video, or in the water hose video around 0:15</i></li>
+				</ul>
+			</li>
+			<li>SIMD implementation - The core of the particle system is a compute shader, running massively in parallel on the GPU.
+				<ul><li>
+					<i>Performance notes are towards the bottom of the page</i>
+				</li></ul>
+			</li>
+		</ul>
+	</p>
+	<h2>Simulations</h2>
+	<h3>Water Hose/Cannon</h3>
+	<p>
+		In this simulation water particles come gushing out of a massive pipe. Next to the side of the pipe is a silhouette representing an approximate person's height.
+		This is the only simulation where particles collide with the center-of-gravity sphere, which can be moved with the mouse. Force can still be applied with it for interesting
+		effects. This is the simulation I spent the most time tweaking the behavior of to get it just right.<br> 
+		<b>Video:</b> <a href="https://drive.google.com/file/d/1U09d2A7JKiF0uUvvSpkDuavB3XhljetJ/view?usp=sharing">Water Cannon</a>
+		<br>
+		<img src="Images/WaterHose.png">
+		<img src="Images/WaterHose2.png">
+	</p>
+	<h3>"Sunlauncher" Magic Spell</h3>
+	<p>
+		This simulation is of a magic spell that allows you to launch a miniature sun. Upon reaching the ground, this miniature sun explodes into millions of particles.
+		These 'bits of sun' then gradually cool until they disappear altogether. The sun can be launched from the camera's position using the "g" key.<br>
+		<b>Video:</b> <a href="https://drive.google.com/file/d/17TUaDQT8WvUFDx-GGRYh6jfa9Ndsz-YU/view?usp=sharing">Sunlauncher Magic Spell</a>
+		<br>
+		<img src="Images/Sunlauncher.png">
+		<img src="Images/SunLauncher.gif">
+	</p>
+	<h3>Free Mode</h3>
+	<p>
+		This abstract simulation mode shows off the absurd number of particles involved in the system. The particles are attracted a 'center of gravity' point when the 
+		user clicks. The force applied when doing so can be scaled with the +/- buttons as described in the program's usage. This was the mode I used while getting
+		the compute shader for the system up and running.
+		<br>
+		<img src="Images/FreeMode.png"><br>
+		<b>Video:</b> <a href="https://drive.google.com/file/d/1XaCs0_QNcn3fqm-8UCMtGgD4AF8a4W_Y/view?usp=sharing">Interesting effects when the particles started with the same z value, 2M particles</a><br>
+		<b>Video:</b> <a href="https://drive.google.com/file/d/1u9Su5AJWkwQsDEVr-XWmP_AU21y0eejE/view?usp=sharing">An osclillating center of gravity, 8 million particles</a><br>
+		<b>Video:</b> <a href="https://drive.google.com/file/d/1HyKoaJ6jvDGove6oxaZLy2sI-GNB9rOl/view?usp=sharing">Some pretty artifacts when rendering 32 million particles</a><br>
+		<b>Video:</b> <a href="https://drive.google.com/file/d/1T-nH93GQ4rtaiY1rjeFyflTRgYxy2LDD/view?usp=sharing">Particles bumping up against non-bounceable floor, 2M particles</a><br>
+		<b>Video:</b> <a href="https://drive.google.com/file/d/1QpoNWrgtIIsNJZnw7KR0MRJ0XKnAJ3d6/view?usp=sharing">Particles bouncing off of the surrounding bounding box, 2M particles</a>
+		<br>
+		Something to note with these videos: google's compression doesn't like the chaos of them. If downloaded they should be full original resolution/framerate.
+	</p>
+	<h4>Tools/Libraries Used</h4>
+	<p>This particle system is based on OpenGL (with a GLSL compute shader). SDL is used to interface with windows. SDL_Image is used to load textures. Glad as an interface 
+		to OpenGL. All code was written in Visual Studio on Windows.
+	</p>
+	<h4>Challenges Encountered</h4>
+	<p>The main challenge was of course getting the OpenGL compute shader running. Even once it was running, there were a variety of challenges stemming from how
+		massively parrallel the compute shader is. All data interfacing (to/from) the compute shader is done through Shader Storage Buffer Objects.
+		<ul>
+			<li>Initialization - The shader storage buffer objects (SSbo's) used to store data in the compute shader (and to communicate with my C++ code) must be initialized in C++ code.
+				For some time, I was initializing all particles' positions, colors, and velocities randomly in C++. However, with larger numbers of particles (~ >8M), this led
+				to significant load times as the CPU completed iterating through all particles. I solved this by moving the detailed initialization into the compute shader. The C++
+				now only zeros out the SSbo's.
+			</li>
+			<li>Spawning - Due to the massively parrallel nature of the compute shader implementation, I decided not to spawn particle how we discussed in class. Doing so what
+				have required a shared common state (number of particles to spawn) across all instance of the compute shader. Properly accessing this required locks and atomic
+				operations, which significantly slowed down the simulation. So, the particle spawning seen in the water hose mode is purely stochastic.
+			</li>
+			<li>Counting the number of particles - For much the same reason as the issue discussed above, I did not end up using a counter of how many particles
+				are actually alive at a given moment. This would require shared state, thus locks, and was thus was slow. Moreover, the number of particles is rather consistent, and
+				seems to have no impact on framerate. In free mode, all particles are always rendered. In water mode, the stream reaches a relatively steady state. In sunlauncher mode,
+				all particles are rendered in the ball when launching. After exploding, some fade, but again, this has no noticeable impact on performance.
+			</li>
+		</ul>
+	</p>
+
+	<h4>Performance Notes</h4>
+	<p>
+		I did these tests only on my personal system, sporting a GTX 1070, an AMD-FX 8350, a 8GB DDR3 RAM.
+		<ul>
+			<li>
+				With no effort put into optimization, simply seeing how many of the spheres I used in my checkin I could render, I could run about 33,000 @ 30FPs, or twice as many
+				if I used a cube model instead of the sphere model. This was without batched draw calls and without any parallelism.
+			</li>
+			<li>
+				After I switched to using a compute shader (SIMD) with a work group size of 128, using GL_POINTS and batched draw-calls, I could run >=8.3 Million @ 60FPS.
+				The framerate finally got inconsistent, ranging between 30-45 FPS, once I increased the number of particles to ~33 million (2^25).
+			</li>
+			<li>
+				In the compiled executable for turnin, the only way I'm aware of to make the framerate drop is by moving the camera very close to the 'sun' in sunlauncher mode.
+				This is likely because all 8 million particles are in a relatively small sphere.
+			</li>
+		</ul>
+	</p>
+
+	<h4>Fun Mistake</h4>
+	<img src="Images/Mistake1.png">
+	<img src="Images/Mistake2.png">
+	<video height="600" controls>
+		<source src="Images/Stringy.mp4" type="video/mp4">
+	</video>
+
+	<p>A snapshot of the source code used for the checkin can be found
+		<a href="https://github.umn.edu/kruge203/CSCI5611/tree/34cf3a93d5f9dcdd4fa1bdbc86f4bd16deb7dc8a/Particle System/ParticleSystem">on GitHub</a>. Checkin video:
+	<a href="https://youtu.be/DLNdENp9iNY">Checkin video - bouncing balls</a></p>
+	
+<div style="font-weight: normal; clear: both; margin-top: 25px; font-size: small; font-style: italic;"><p>The views and opinions expressed in this page are strictly those of the page author.<br>The contents of this page have not been reviewed or approved by the University of Minnesota.</p></div></body>
+
+
+<!-- Mirrored from www-users.cselabs.umn.edu/~kruge203/CSCI5611/HW1/ParticleSystem.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Mar 2021 03:20:25 GMT -->
+</html>
