@@ -116,14 +116,14 @@
 	</p>
 	<h4>Challenges Encountered</h4>
 	<p>The main challenge was of course getting the OpenGL compute shader running. Even once it was running, there were a variety of challenges stemming from how
-		massively parrallel the compute shader is. All data interfacing (to/from) the compute shader is done through Shader Storage Buffer Objects.
+		massively parallel the compute shader is. All data interfacing (to/from) the compute shader is done through Shader Storage Buffer Objects.
 		<ul>
 			<li>Initialization - The shader storage buffer objects (SSbo's) used to store data in the compute shader (and to communicate with my C++ code) must be initialized in C++ code.
 				For some time, I was initializing all particles' positions, colors, and velocities randomly in C++. However, with larger numbers of particles (~ >8M), this led
 				to significant load times as the CPU completed iterating through all particles. I solved this by moving the detailed initialization into the compute shader. The C++
 				now only zeros out the SSbo's.
 			</li>
-			<li>Spawning - Due to the massively parrallel nature of the compute shader implementation, I decided not to spawn particle how we discussed in class. Doing so what
+			<li>Spawning - Due to the massively parallel nature of the compute shader implementation, I decided not to spawn particle how we discussed in class. Doing so what
 				have required a shared common state (number of particles to spawn) across all instance of the compute shader. Properly accessing this required locks and atomic
 				operations, which significantly slowed down the simulation. So, the particle spawning seen in the water hose mode is purely stochastic.
 			</li>
