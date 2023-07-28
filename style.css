@@ -49,7 +49,7 @@ th {
 
 @supports not (-ms-ime-align: auto) {
 	details summary { 
-	cursor: pointer;
+		cursor: pointer;
 	}
 
 	details summary > * {
