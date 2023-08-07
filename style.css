@@ -54,6 +54,15 @@ p {
 	margin-block-end: 0.3em;
 }
 
+.hidelink {
+	opacity: 0;
+}
+
+h1:hover .hidelink, h2:hover .hidelink {
+	opacity: 1;
+	transition: opacity 0.25s ease;
+}
+
 @media (prefers-color-scheme: light) {
 }
 
